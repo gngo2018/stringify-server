@@ -14,7 +14,5 @@ app.use(errorHandler);
 app.use(notFoundHandler);
 
 app.listen(port, () => {
-    console.log(process.env);
-    
   console.log(`Timezones by location application is running on port ${port}.`);
 });
