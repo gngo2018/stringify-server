@@ -17,7 +17,7 @@ clientRouter.get("/", async (req: Request, res: Response) => {
 });
 
 //Get Client By Id
-clientRouter.get('/:id', async (req: Request, res: Response) =>{
+clientRouter.get('/:id', async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id, 10);
     try {
       const client: Client = await ClientController.getClientById(id);
@@ -38,8 +38,17 @@ clientRouter.put('/:id', () => {
 })
 
 //Delete Client
-clientRouter.delete('/:id', () => {
-    
+clientRouter.delete('/:id', async (req: Request, res: Response) => {
+    const id: number = parseInt(req.params.id);
+    try{
+        const clientSuccessfullyDeleted = await ClientController.deleteClientById(id);
+
+        if (clientSuccessfullyDeleted){
+            return res.status(204).send(`Client ${id} successfully deleted`);
+        }
+    } catch(e) {
+        res.status(500).send(e);
+    }
 })
 
 //Create Client
