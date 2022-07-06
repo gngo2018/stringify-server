@@ -20,33 +20,45 @@ clientRouter.get("/", async (req: Request, res: Response) => {
 clientRouter.get('/:id', async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id, 10);
     try {
-      const client: Client = await ClientController.getClientById(id);
-  
-      if (client) {
-        return res.status(200).send(client);
-      }
-  
-      res.status(404).send("Client not found");
+        const client: Client = await ClientController.getClientById(id);
+
+        if (client) {
+            return res.status(200).send(client);
+        }
+
+        res.status(404).send("Client not found");
     } catch (e) {
-      res.status(500).send(e);
+        res.status(500).send(e);
     }
 });
 
 //Update Client
-clientRouter.put('/:id', () => {
-    // update ingredient
+clientRouter.put('/:id', async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    try {
+        const client: ClientInput = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            racket: req.body.racket
+        }
+
+        const result = await ClientController.updateClient(id, client);
+        return res.status(200).send(result)
+    } catch (e) {
+        res.status(500).send(e);
+    }
 })
 
 //Delete Client
 clientRouter.delete('/:id', async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id);
-    try{
+    try {
         const clientSuccessfullyDeleted = await ClientController.deleteClientById(id);
 
-        if (clientSuccessfullyDeleted){
+        if (clientSuccessfullyDeleted) {
             return res.status(204).send(`Client ${id} successfully deleted`);
         }
-    } catch(e) {
+    } catch (e) {
         res.status(500).send(e);
     }
 })
@@ -62,9 +74,9 @@ clientRouter.post('/', async (req: Request, res: Response) => {
         const result = await ClientController.create(client)
         return res.status(200).send(result)
     }
-    catch(e) {
+    catch (e) {
         console.log(e);
-        
+
         res.status(500).send(e);
     }
 })

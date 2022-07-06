@@ -23,3 +23,8 @@ export const deleteClientById = async (id: number) => {
     const clientSuccessfullyDeleted = await ClientService.DeleteClientByIdAsync(id);
     return clientSuccessfullyDeleted;
 }
+
+export const updateClient = async (id: number, payload: ClientInput) => {
+    const updatedClient = await ClientService.UpdateClientAsync(id, payload);
+    return updatedClient;
+}
