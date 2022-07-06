@@ -16,6 +16,22 @@ clientRouter.get("/", async (req: Request, res: Response) => {
     }
 });
 
+//Get Client By Id
+clientRouter.get('/:id', async (req: Request, res: Response) =>{
+    const id: number = parseInt(req.params.id, 10);
+    try {
+      const client: Client = await ClientController.getClientById(id);
+  
+      if (client) {
+        return res.status(200).send(client);
+      }
+  
+      res.status(404).send("Client not found");
+    } catch (e) {
+      res.status(500).send(e);
+    }
+});
+
 //Update Client
 clientRouter.put('/:id', () => {
     // update ingredient
@@ -23,7 +39,7 @@ clientRouter.put('/:id', () => {
 
 //Delete Client
 clientRouter.delete('/:id', () => {
-    // delete ingredient
+    
 })
 
 //Create Client

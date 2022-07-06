@@ -14,7 +14,6 @@ export async function GetClientByIdAsync(id: number) {
     return client;
 }
 
-
 export async function CreateClientAsync(client: ClientInput) {
     const result = await ClientDataAccess.CreateClientAsync(client)
     return result;
