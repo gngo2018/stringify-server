@@ -39,7 +39,9 @@ clientRouter.put('/:id', async (req: Request, res: Response) => {
         const client: ClientInput = {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            racket: req.body.racket
+            racket: req.body.racket,
+            phoneNumber: req.body.phoneNumber,
+            emailAddress: req.body.emailAddress
         }
 
         const result = await ClientController.updateClient(id, client);
@@ -70,6 +72,8 @@ clientRouter.post('/', async (req: Request, res: Response) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             racket: req.body.racket,
+            phoneNumber: req.body.phoneNumber,
+            emailAddress: req.body.emailAddress
         }
         const result = await ClientController.create(client)
         return res.status(200).send(result)
