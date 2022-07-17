@@ -6,6 +6,11 @@ export const getAll = async () => {
     return stringJobs;
 }
 
+export const getAllByClientId = async (clientId: number) => {
+    const clientStringJobs = await StringJobService.GetAllStringJobsByClientId(clientId);
+    return clientStringJobs;
+}
+
 export const create = async (payload: StringJobInput) => {
     const stringJob = await StringJobService.CreateStringJobAsync(payload);
     return stringJob;

@@ -7,6 +7,11 @@ export async function GetAllStringJobsAsync() {
     return stringJobs
 };
 
+export async function GetAllStringJobsByClientId(clientId: number) {
+    const clientStringJobs = await StringJobDataAccess.GetStringJobsByClientId(clientId);
+    return clientStringJobs;
+}
+
 export async function CreateStringJobAsync(stringJob: StringJobInput) {
     const result = await StringJobDataAccess.CreateStringJobAsync(stringJob)
     return result;
