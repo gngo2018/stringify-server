@@ -8,7 +8,7 @@ import { notFoundHandler } from './api/middlewares/NotFoundMiddleware'
 import { stringJobRouter } from './api/routes/StringJobRouter'
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const allowedOrigins = ['http://localhost:3001', 'https://hermes-app-blush.vercel.app'];
 
