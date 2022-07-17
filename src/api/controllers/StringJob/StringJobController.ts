@@ -20,3 +20,13 @@ export const create = async (payload: StringJobInput) => {
     const stringJob = await StringJobService.CreateStringJobAsync(payload);
     return stringJob;
 }
+
+export const update = async (id: number, payload: StringJobInput) => {
+    const stringJob = await StringJobService.UpdateStringJobAsync(id, payload);
+    return stringJob;
+}
+
+export const deleteByStringJobId = async (id: number) => {
+    const result = await StringJobService.DeleteStringJobAsync(id);
+    return result;
+}

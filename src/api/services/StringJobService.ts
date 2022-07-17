@@ -12,12 +12,22 @@ export async function GetAllStringJobsByClientId(clientId: number) {
     return clientStringJobs;
 }
 
-export async function GetStringJobById(id: number){
+export async function GetStringJobById(id: number) {
     const stringJob = await StringJobDataAccess.GetStringJobById(id);
     return stringJob;
 }
 
 export async function CreateStringJobAsync(stringJob: StringJobInput) {
     const result = await StringJobDataAccess.CreateStringJobAsync(stringJob)
+    return result;
+}
+
+export async function UpdateStringJobAsync(id: number, payload: StringJobInput) {
+    const result = await StringJobDataAccess.UpdateStringJobAsync(id, payload);
+    return result;
+}
+
+export async function DeleteStringJobAsync(id: number){
+    const result = await StringJobDataAccess.DeleteStringJobAsync(id);
     return result;
 }

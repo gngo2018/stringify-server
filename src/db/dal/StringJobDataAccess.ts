@@ -36,3 +36,22 @@ export const CreateStringJobAsync = async (stringJob: StringJobInput): Promise<S
     const result = await StringJob.create(stringJob)
     return result;
 }
+
+export const UpdateStringJobAsync = async (id:number, stringJob: StringJobInput): Promise<StringJobOutput> => {
+    const existingStringJob = await StringJob.findByPk(id);
+    if(!existingStringJob){
+        throw new Error('not found')
+    }
+    const result = await (existingStringJob as StringJob).update(stringJob);
+    return result;
+}
+
+export const DeleteStringJobAsync = async (id: number): Promise<boolean> => {
+    const deletedStringJob = await StringJob.destroy({
+        where: {
+            id: id
+        }
+    })
+
+    return !!deletedStringJob;
+}
