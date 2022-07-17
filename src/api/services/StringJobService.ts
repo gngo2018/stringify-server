@@ -12,6 +12,11 @@ export async function GetAllStringJobsByClientId(clientId: number) {
     return clientStringJobs;
 }
 
+export async function GetStringJobById(id: number){
+    const stringJob = await StringJobDataAccess.GetStringJobById(id);
+    return stringJob;
+}
+
 export async function CreateStringJobAsync(stringJob: StringJobInput) {
     const result = await StringJobDataAccess.CreateStringJobAsync(stringJob)
     return result;

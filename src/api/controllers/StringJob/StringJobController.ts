@@ -6,6 +6,11 @@ export const getAll = async () => {
     return stringJobs;
 }
 
+export const get = async(id: number) => {
+    const stringJob = await StringJobService.GetStringJobById(id);
+    return stringJob;
+}
+
 export const getAllByClientId = async (clientId: number) => {
     const clientStringJobs = await StringJobService.GetAllStringJobsByClientId(clientId);
     return clientStringJobs;

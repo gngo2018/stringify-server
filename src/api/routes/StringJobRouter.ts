@@ -16,6 +16,19 @@ stringJobRouter.get("/", async (req: Request, res: Response) => {
     }
 });
 
+stringJobRouter.get('/:id', async(req: Request, res: Response) =>{
+    const id = parseInt(req.params.id, 10);
+    try{
+        const stringJob = await StringJobController.get(id);
+        if (stringJob){
+            return res.status(200).send(stringJob);
+        }
+        res.status(404).send("String Job not found");
+    } catch (e){
+        res.status(500).send(e);
+    }
+});
+
 //Get String Jobs by ClientId
 stringJobRouter.get('/client/:id', async (req: Request, res: Response) => {
     const clientId: number = parseInt(req.params.id, 10);

@@ -24,6 +24,14 @@ export const GetStringJobsByClientId = async (clientId: number): Promise<StringJ
     return clientStringJobs;
 }
 
+export const GetStringJobById = async (id: number): Promise<StringJobOutput> => {
+    const stringJob = await StringJob.findByPk(id);
+    if(!stringJob){
+        throw new Error('not found')
+    }
+    return stringJob;
+}
+
 export const CreateStringJobAsync = async (stringJob: StringJobInput): Promise<StringJobOutput> => {
     const result = await StringJob.create(stringJob)
     return result;
