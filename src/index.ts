@@ -18,7 +18,8 @@ const allowedOrigins = [
 ];
 
 const options: cors.CorsOptions = {
-  origin: allowedOrigins
+  origin: allowedOrigins,
+  methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
 };
 
 app.use(cors(options));
