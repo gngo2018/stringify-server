@@ -5,6 +5,10 @@ import { Client } from '../models/Client'
 
 export const clientRouter = express.Router();
 
+clientRouter.get("/ping", async (req: Request, res: Response) =>{
+    res.status(200).send('Successful Ping!')
+})
+
 // GET ALL CLIENTS
 clientRouter.get("/", async (req: Request, res: Response) => {
     try {
