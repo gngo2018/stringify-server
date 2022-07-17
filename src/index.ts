@@ -10,7 +10,12 @@ import { stringJobRouter } from './api/routes/StringJobRouter'
 const app = express();
 const port = process.env.PORT || 3000;
 
-const allowedOrigins = ['http://localhost:3001', 'https://hermes-app-blush.vercel.app'];
+const allowedOrigins = [
+  'http://localhost:3001', 
+  'https://stringify-client.vercel.app/',
+  'https://stringify-client-git-main-gngo2018.vercel.app/',
+  'https://stringify-client-gngo2018.vercel.app/'
+];
 
 const options: cors.CorsOptions = {
   origin: allowedOrigins
