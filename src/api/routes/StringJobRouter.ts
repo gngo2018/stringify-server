@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import { StringJobInput, StringJobOutput } from '../../db/models/StringJob'
+import * as ClientController from '../controllers/Client/ClientController'
 import * as StringJobController from '../controllers/StringJob/StringJobController'
 import { StringJob } from '../models/StringJob'
 
@@ -8,9 +9,30 @@ export const stringJobRouter = express.Router();
 // GET ALL String Jobs
 stringJobRouter.get("/", async (req: Request, res: Response) => {
     try {
-        const stringJobs: StringJob[] = await StringJobController.getAll();
+        const stringJobs = await StringJobController.getAll();
+        const stringJobDtoArray: StringJob[]  = [];
 
-        res.status(200).send(stringJobs);
+        for (const sj of stringJobs) {
+            const client = await ClientController.getClientById(sj.clientId);
+            const stringJobDto: StringJob = {
+                id: sj.id,
+                jobDateTimeUtc: sj.jobDateTimeUtc,
+                clientId: sj.clientId,
+                racket: sj.racket,
+                stringName: sj.stringName,
+                stringType: sj.stringType,
+                tension: sj.tension,
+                tensionType: sj.tensionType,
+                chargeAmount: sj.chargeAmount,
+                notes: sj.notes,
+                clientName: client.firstName
+            }
+
+            stringJobDtoArray.push(stringJobDto);
+        }
+
+
+        res.status(200).send(stringJobDtoArray);
     } catch (e) {
         res.status(500).send(e);
     }
