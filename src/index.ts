@@ -2,10 +2,10 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import 'dotenv/config'
-import { clientRouter } from './src/api/routes/ClientRouter'
-import { errorHandler } from './src/api/middlewares/ErrorMiddleware'
-import { notFoundHandler } from './src/api/middlewares/NotFoundMiddleware'
-import { stringJobRouter } from './src/api/routes/StringJobRouter'
+import { clientRouter } from './api/routes/ClientRouter'
+import { errorHandler } from './api/middlewares/ErrorMiddleware'
+import { notFoundHandler } from './api/middlewares/NotFoundMiddleware'
+import { stringJobRouter } from './api/routes/StringJobRouter'
 
 const app = express();
 const port = 3000;
