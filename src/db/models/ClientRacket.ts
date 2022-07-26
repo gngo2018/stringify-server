@@ -1,51 +1,54 @@
 import { DataTypes, Model, Optional } from 'sequelize'
 import sequelizeConnection from '../config'
-import ClientRacket from './ClientRacket';
+import Client from './Client';
+import Racket from './Racket';
 
-interface RacketAttributes {
+interface ClientRacketAttributes {
     id: number;
-    brand: string;
-    model: string;
-    year: string;
+    serialNumber: string;
+    clientId: number;
+    racketId: number;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
 }
 
-export interface RacketInput extends Optional<RacketAttributes, 'id' | 'brand' | 'model' | 'year'> { }
-export interface RacketOutput extends Required<RacketAttributes> { }
+export interface ClientRacketInput extends Optional<ClientRacketAttributes, 'id' | 'serialNumber' | 'clientId' | 'racketId' > { }
+export interface ClientRacketOutput extends Required<ClientRacketAttributes> { }
 
-class Racket extends Model<RacketAttributes, RacketInput> implements RacketAttributes {
-    public id!: number
-    public brand!: string
-    public model!: string
-    public year!: string
+class ClientRacket extends Model<ClientRacketAttributes, ClientRacketInput> implements ClientRacketAttributes {
+    public id: number;
+    public serialNumber: string;
+    public clientId: number;
+    public racketId: number;
     // timestamps!
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
     public readonly deletedAt!: Date;
 }
 
-Racket.init({
+ClientRacket.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-    },
-    brand: {
-        type: DataTypes.STRING,
         allowNull: false,
-        field: 'brand'
     },
-    model: {
+    serialNumber: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
-        field: 'model'
+        field: 'serial_number'
     },
-    year: {
+    clientId: {
         type: DataTypes.INTEGER,
-        allowNull: true,
-        field: 'year'
+        allowNull: false,
+        field: 'client_id'
+    },
+    racketId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'racket_id'
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -66,10 +69,6 @@ Racket.init({
         paranoid: true
     })
 
-Racket.hasMany(ClientRacket, {
-    sourceKey: 'id',
-    foreignKey: 'racketId',
-    as: 'Rackets'
-});
 
-export default Racket;
+
+export default ClientRacket;

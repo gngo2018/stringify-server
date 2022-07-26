@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize'
 import sequelizeConnection from '../config'
+import ClientRacket from './ClientRacket';
 import StringJob from './StringJob';
 
 interface ClientAttributes {
@@ -84,4 +85,11 @@ Client.hasMany(StringJob, {
   foreignKey: 'clientId',
   as: 'StringJobs'
 })
+
+Client.hasMany(ClientRacket, {
+  sourceKey: 'id',
+  foreignKey: 'clientId',
+  as: 'Clients'
+});
+
 export default Client;
