@@ -73,6 +73,7 @@ stringJobRouter.post('/', async (req: Request, res: Response) => {
         const stringJob: StringJobInput = {
             jobDateTimeUtc: req.body.jobDateTimeUtc,
             clientId: req.body.clientId,
+            clientRacketId: req.body.clientRacketId,
             racket: req.body.racket,
             stringName: req.body.stringName,
             stringType: req.body.stringType,

@@ -5,6 +5,7 @@ interface StringJobAttributes {
   id: number;
   jobDateTimeUtc: Date;
   clientId: number;
+  clientRacketId?: number;
   racket: string;
   stringName: string;
   stringType: string;
@@ -21,6 +22,7 @@ export interface StringJobInput extends Optional<StringJobAttributes,
     'id' | 
     'jobDateTimeUtc' | 
     'clientId' | 
+    'clientRacketId' | 
     'racket' | 
     'stringName' | 
     'stringType' |
@@ -35,6 +37,7 @@ class StringJob extends Model<StringJobAttributes, StringJobInput> implements St
   public id!: number;
   public jobDateTimeUtc!: Date;
   public clientId!: number;
+  public clientRacketId!: number;
   public racket!: string;
   public stringName!: string;
   public stringType!: string;
@@ -61,6 +64,10 @@ StringJob.init({
   clientId: {
     type: DataTypes.INTEGER,
     field: 'client_id'
+  },
+  clientRacketId: {
+    type: DataTypes.INTEGER,
+    field: 'client_racket_id'
   },
   racket: {
     type: DataTypes.STRING
