@@ -1,14 +1,43 @@
 import {Op} from 'sequelize'
+import { StringJobListDTO } from '../dto/StringJobListDTO'
+import Client from '../models/Client'
+import ClientRacket from '../models/ClientRacket'
+import Racket from '../models/Racket'
 import StringJob, { StringJobInput, StringJobOutput } from '../models/StringJob'
 import { GetAllStringJobsilters } from './types/StringJobTypes'
 
-export const GetAllStringJobsAsync = async (filters?: GetAllStringJobsilters): Promise<StringJobOutput[]> => {
-    return StringJob.findAll({
+export const GetAllStringJobsAsync = async (filters?: GetAllStringJobsilters) => {
+    const stringJobs = await StringJob.findAll({
         where: {
             ...(filters?.isDeleted && {deletedAt: {[Op.not]: null}})
         },
         ...((filters?.isDeleted || filters?.includeDeleted) && {paranoid: true})
     })
+
+    const query = stringJobs.map(async (sj) => {
+        let clientRacket: ClientRacket;
+        let racket: Racket;
+        const client: Client = await Client.findByPk(sj.clientId);
+
+        if(sj.clientRacketId) {
+            clientRacket = await ClientRacket.findByPk(sj.clientRacketId);
+            racket = await Racket.findByPk(clientRacket.racketId);
+        }
+
+        const stringJobDto: StringJobListDTO = {
+            stringJobId: sj.id,
+            jobDateTimeUtc: sj.jobDateTimeUtc,
+            clientFirstName: client.firstName,
+            racketName: clientRacket ? `${racket.brand} ${racket.model} ${racket.year}` : sj.racket,
+            racketSerialNumber: clientRacket ? clientRacket.serialNumber : ''
+        }
+
+        return stringJobDto;;
+    })
+
+    const stringJobListDto = await Promise.all(query);
+
+    return stringJobListDto;
 }
 
 export const GetStringJobsByClientId = async (clientId: number): Promise<StringJobOutput[]> => {

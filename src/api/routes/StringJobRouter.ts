@@ -10,29 +10,8 @@ export const stringJobRouter = express.Router();
 stringJobRouter.get("/", async (req: Request, res: Response) => {
     try {
         const stringJobs = await StringJobController.getAll();
-        const stringJobDtoArray: StringJob[]  = [];
 
-        for (const sj of stringJobs) {
-            const client = await ClientController.getClientById(sj.clientId);
-            const stringJobDto: StringJob = {
-                id: sj.id,
-                jobDateTimeUtc: sj.jobDateTimeUtc,
-                clientId: sj.clientId,
-                racket: sj.racket,
-                stringName: sj.stringName,
-                stringType: sj.stringType,
-                tension: sj.tension,
-                tensionType: sj.tensionType,
-                chargeAmount: sj.chargeAmount,
-                notes: sj.notes,
-                clientName: client.firstName
-            }
-
-            stringJobDtoArray.push(stringJobDto);
-        }
-
-
-        res.status(200).send(stringJobDtoArray);
+        res.status(200).send(stringJobs);
     } catch (e) {
         res.status(500).send(e);
     }
