@@ -4,13 +4,18 @@ import ClientRacket, { ClientRacketOutput, ClientRacketInput } from '../../db/mo
 
 
 export async function GetAllClientRacketsAsync() {
-    const ClientRackets = await ClientRacketDataAccess.GetAllClientRacketsAsync();
-    return ClientRackets
+    const clientRackets = await ClientRacketDataAccess.GetAllClientRacketsAsync();
+    return clientRackets
 };
 
 export async function GetClientRacketByIdAsync(id: number) {
-    const ClientRacket = await ClientRacketDataAccess.GetClientRacketByIdAsync(id);
-    return ClientRacket;
+    const clientRacket = await ClientRacketDataAccess.GetClientRacketByIdAsync(id);
+    return clientRacket;
+}
+
+export async function GetRacketsByClientId(clientId: number) {
+    const rackets = await ClientRacketDataAccess.GetRacketsByClientId(clientId);
+    return rackets;
 }
 
 export async function CreateClientRacketAsync(ClientRacket: ClientRacketInput) {

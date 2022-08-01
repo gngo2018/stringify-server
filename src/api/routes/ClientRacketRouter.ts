@@ -35,6 +35,21 @@ clientRacketRouter.get('/:id', async (req: Request, res: Response) => {
     }
 });
 
+//Get ClientRacket By Id
+clientRacketRouter.get('/client/:id', async (req: Request, res: Response) => {
+    const clientId: number = parseInt(req.params.id, 10);
+    try {
+        const rackets = await ClientRacketController.getRacketsByClientId(clientId);
+
+        if (rackets) {
+            return res.status(200).send(rackets);
+        }
+        res.status(404).send("Rackets not found");
+    } catch (e) {
+        res.status(500).send(e);
+    }
+});
+
 //Update ClientRacket
 clientRacketRouter.put('/:id', async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
