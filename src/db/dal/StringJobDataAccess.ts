@@ -1,5 +1,6 @@
-import {Op} from 'sequelize'
-import { StringJobListDTO } from '../dto/StringJobListDTO'
+import { Op } from 'sequelize'
+import { StringJobDetailDTO } from '../dto/StringJobs/StringJobDetailDTO'
+import { StringJobListDTO } from '../dto/StringJobs/StringJobListDTO'
 import Client from '../models/Client'
 import ClientRacket from '../models/ClientRacket'
 import Racket from '../models/Racket'
@@ -9,9 +10,9 @@ import { GetAllStringJobsilters } from './types/StringJobTypes'
 export const GetAllStringJobsAsync = async (filters?: GetAllStringJobsilters) => {
     const stringJobs = await StringJob.findAll({
         where: {
-            ...(filters?.isDeleted && {deletedAt: {[Op.not]: null}})
+            ...(filters?.isDeleted && { deletedAt: { [Op.not]: null } })
         },
-        ...((filters?.isDeleted || filters?.includeDeleted) && {paranoid: true})
+        ...((filters?.isDeleted || filters?.includeDeleted) && { paranoid: true })
     })
 
     const query = stringJobs.map(async (sj) => {
@@ -19,7 +20,7 @@ export const GetAllStringJobsAsync = async (filters?: GetAllStringJobsilters) =>
         let racket: Racket;
         const client: Client = await Client.findByPk(sj.clientId);
 
-        if(sj.clientRacketId) {
+        if (sj.clientRacketId) {
             clientRacket = await ClientRacket.findByPk(sj.clientRacketId);
             racket = await Racket.findByPk(clientRacket.racketId);
         }
@@ -32,7 +33,7 @@ export const GetAllStringJobsAsync = async (filters?: GetAllStringJobsilters) =>
             racketSerialNumber: clientRacket ? clientRacket.serialNumber : ''
         }
 
-        return stringJobDto;;
+        return stringJobDto;
     })
 
     const stringJobListDto = await Promise.all(query);
@@ -53,12 +54,38 @@ export const GetStringJobsByClientId = async (clientId: number): Promise<StringJ
     return clientStringJobs;
 }
 
-export const GetStringJobById = async (id: number): Promise<StringJobOutput> => {
+export const GetStringJobById = async (id: number): Promise<StringJobDetailDTO> => {
     const stringJob = await StringJob.findByPk(id);
-    if(!stringJob){
+    if (!stringJob) {
         throw new Error('not found')
     }
-    return stringJob;
+
+    let clientRacket: ClientRacket;
+    let racket: Racket;
+    const client: Client = await Client.findByPk(stringJob.clientId);
+
+    if (stringJob.clientRacketId) {
+        clientRacket = await ClientRacket.findByPk(stringJob.clientRacketId);
+        racket = await Racket.findByPk(clientRacket.racketId);
+    }
+
+    const stringJobDto: StringJobDetailDTO = {
+        stringJobId: stringJob.id,
+        jobDateTimeUtc: stringJob.jobDateTimeUtc,
+        clientId: stringJob.clientId,
+        clientRacketId: stringJob.clientRacketId,
+        clientFirstName: client.firstName,
+        racketName: clientRacket ? `${racket.brand} ${racket.model} ${racket.year}` : stringJob.racket,
+        racketSerialNumber: clientRacket ? clientRacket.serialNumber : '',
+        stringName: stringJob.stringName,
+        stringType: stringJob.stringType,
+        tension: stringJob.tension,
+        tensionType: stringJob.tensionType,
+        chargeAmount: stringJob.chargeAmount,
+        notes: stringJob.notes
+    }
+
+    return stringJobDto;
 }
 
 export const CreateStringJobAsync = async (stringJob: StringJobInput): Promise<StringJobOutput> => {
@@ -66,9 +93,9 @@ export const CreateStringJobAsync = async (stringJob: StringJobInput): Promise<S
     return result;
 }
 
-export const UpdateStringJobAsync = async (id:number, stringJob: StringJobInput): Promise<StringJobOutput> => {
+export const UpdateStringJobAsync = async (id: number, stringJob: StringJobInput): Promise<StringJobOutput> => {
     const existingStringJob = await StringJob.findByPk(id);
-    if(!existingStringJob){
+    if (!existingStringJob) {
         throw new Error('not found')
     }
     const result = await (existingStringJob as StringJob).update(stringJob);
