@@ -16,7 +16,8 @@ const allowedOrigins = [
   'http://localhost:3001', 
   'https://stringify-client.vercel.app',
   'https://stringify-client-git-main-gngo2018.vercel.app',
-  'https://stringify-client-gngo2018.vercel.app'
+  'https://stringify-client-gngo2018.vercel.app',
+  'https://stringify.vercel.app'
 ];
 
 const options: cors.CorsOptions = {
