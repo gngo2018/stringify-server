@@ -79,6 +79,7 @@ stringJobRouter.put('/:id', async (req: Request, res: Response) => {
             jobDateTimeUtc: req.body.jobDateTimeUtc,
             clientId: req.body.clientId,
             racket: req.body.racket,
+            clientRacketId: req.body.clientRacketId,
             stringName: req.body.stringName,
             stringType: req.body.stringType,
             tension: req.body.tension,
