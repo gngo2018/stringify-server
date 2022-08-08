@@ -30,7 +30,8 @@ export const GetAllStringJobsAsync = async (filters?: GetAllStringJobsilters) =>
             jobDateTimeUtc: sj.jobDateTimeUtc,
             clientFirstName: client.firstName,
             racketName: clientRacket ? `${racket.brand} ${racket.model} ${racket.year}` : sj.racket,
-            racketSerialNumber: clientRacket ? clientRacket.serialNumber : ''
+            racketSerialNumber: clientRacket ? clientRacket.serialNumber : '',
+            clientId: sj.clientId
         }
 
         return stringJobDto;
