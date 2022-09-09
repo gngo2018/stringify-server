@@ -10,10 +10,12 @@ import { racketRouter } from './api/routes/RacketRouter'
 import { clientRacketRouter } from './api/routes/ClientRacketRouter'
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3070;
 
 const allowedOrigins = [
   'http://localhost:3001', 
+  'http://localhost:3000', 
+  'http://192.168.4.25:3000', 
   'https://stringify-client.vercel.app',
   'https://stringify-client-git-main-gngo2018.vercel.app',
   'https://stringify-client-gngo2018.vercel.app',
