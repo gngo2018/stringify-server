@@ -13,13 +13,12 @@ export const GetAllStringJobsAsync = async () => {
 	r.brand || ' ' || r.model || ' ' || r.year AS "racketName", c.id AS "clientId" 
     FROM "StringJobs" s 
 	LEFT OUTER JOIN "Clients" c ON c.id = s.client_id 
-	LEFT OUTER JOIN "ClientRackets" cr ON cr.client_id = c.id 
+	LEFT OUTER JOIN "ClientRackets" cr ON cr.id = s.client_racket_id 
 	LEFT OUTER JOIN "Rackets" r ON r.id = cr.racket_id 
     WHERE s.deleted_at IS null AND c.deleted_at IS null`;
 
     const stringJobListDto: StringJobListDTO[] = await sequelizeConnection.query(sql, {
-        type: QueryTypes.SELECT,
-        mapToModel: true,
+        type: QueryTypes.SELECT
     });
 
     return stringJobListDto;
