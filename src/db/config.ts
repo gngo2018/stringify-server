@@ -23,4 +23,10 @@ const sequelizeConnection = new Sequelize(dbName, dbUser, dbPassword, {
   dialectOptions: dialectOptions
 })
 
+sequelizeConnection.authenticate().then(() => {
+  console.log('Connection to database has been established successfully.');
+}).catch(err => {
+  console.error('Unable to connect to database:', err);
+});
+
 export default sequelizeConnection
