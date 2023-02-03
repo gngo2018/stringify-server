@@ -1,4 +1,4 @@
-import { Op, QueryTypes } from 'sequelize'
+import { QueryTypes } from 'sequelize'
 import sequelizeConnection from '../config'
 import { StringJobDetailDTO } from '../dto/StringJobs/StringJobDetailDTO'
 import { StringJobListDTO } from '../dto/StringJobs/StringJobListDTO'

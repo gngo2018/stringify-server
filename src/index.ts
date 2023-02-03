@@ -8,6 +8,7 @@ import { notFoundHandler } from './api/middlewares/NotFoundMiddleware'
 import { stringJobRouter } from './api/routes/StringJobRouter'
 import { racketRouter } from './api/routes/RacketRouter'
 import { clientRacketRouter } from './api/routes/ClientRacketRouter'
+import { analyticsRouter } from './api/routes/AnalyticsRouter'
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -32,6 +33,7 @@ app.use("/api/clients", clientRouter);
 app.use("/api/stringjobs", stringJobRouter)
 app.use("/api/rackets", racketRouter)
 app.use("/api/clientrackets", clientRacketRouter)
+app.use("/api/analytics", analyticsRouter)
 app.use(errorHandler);
 app.use(notFoundHandler);
 

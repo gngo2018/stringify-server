@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express'
 import { StringJobInput, StringJobOutput } from '../../db/models/StringJob'
-import * as ClientController from '../controllers/Client/ClientController'
 import * as StringJobController from '../controllers/StringJob/StringJobController'
 import { StringJob } from '../models/StringJob'
 
@@ -103,4 +102,4 @@ stringJobRouter.delete('/:id', async (req: Request, res: Response) => {
     } catch(e) {
         res.status(500).send(e)
     }
-})
+});
