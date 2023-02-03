@@ -64,8 +64,6 @@ stringJobRouter.post('/', async (req: Request, res: Response) => {
         return res.status(200).send(result)
     }
     catch (e) {
-        console.log(e);
-
         res.status(500).send(e);
     }
 })

@@ -59,9 +59,6 @@ clientRacketRouter.put('/:id', async (req: Request, res: Response) => {
             clientId: req.body.clientId,
             racketId: req.body.racketId
         }
-        console.log(clientRacket);
-        
-
         const result = await ClientRacketController.updateClientRacket(id, clientRacket);
         return res.status(200).send(result)
     } catch (e) {
@@ -86,8 +83,6 @@ clientRacketRouter.delete('/:id', async (req: Request, res: Response) => {
 //Create ClientRacket
 clientRacketRouter.post('/', async (req: Request, res: Response) => {
     try {
-        console.log(req.body);
-        
         const clientRacket: ClientRacketInput = {
             serialNumber: req.body.serialNumber,
             clientId: req.body.clientId,
@@ -97,8 +92,6 @@ clientRacketRouter.post('/', async (req: Request, res: Response) => {
         return res.status(200).send(result)
     }
     catch (e) {
-        console.log(e);
-
         res.status(500).send(e);
     }
 })

@@ -91,12 +91,7 @@ export const DeleteClientRacketByIdAsync = async (id: number): Promise<boolean> 
 
 export const UpdateClientRacketAsync = async (id: number, payload: Partial<ClientRacketInput>): Promise<ClientRacketOutput> => {
     const clientRacket = await ClientRacket.findByPk(id)
-    // console.log(clientRacket as ClientRacket);
-    console.log(payload);
-
-
     if (!clientRacket) {
-        // @todo throw custom error
         throw new Error('not found')
     }
     const updatedClientRacket = await (clientRacket).update(payload)
