@@ -8,4 +8,5 @@ export type ClientRacketDetailDTO = {
     racketBrand: string,
     racketModel: string,
     racketYear: string
+    timesStrung: number
 }

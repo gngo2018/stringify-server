@@ -1,9 +1,10 @@
-import { Op } from 'sequelize'
+import { Op, QueryTypes } from 'sequelize'
 import { ClientRacketDetailDTO } from '../dto/ClientRacketDetailDTO'
 import Client from '../models/Client'
 import ClientRacket, { ClientRacketOutput, ClientRacketInput } from '../models/ClientRacket'
 import Racket from '../models/Racket'
 import { GetAllClientRacketsFilters } from './types/ClientRacketTypes'
+import sequelizeConnection from '../config'
 
 export const GetAllClientRacketsAsync = async (filters?: GetAllClientRacketsFilters) => {
     const clientRackets = await ClientRacket.findAll({
@@ -16,6 +17,17 @@ export const GetAllClientRacketsAsync = async (filters?: GetAllClientRacketsFilt
     const query = clientRackets.map(async (cr) => {
         const racket = await Racket.findByPk(cr.racketId);
         const client = await Client.findByPk(cr.clientId);
+        const timesStrungSql = `SELECT s.id
+        FROM "StringJobs" s 
+        LEFT OUTER JOIN "ClientRackets" cr ON cr.id = s.client_racket_id 
+        LEFT OUTER JOIN "Rackets" r ON r.id = cr.racket_id 
+        WHERE s.deleted_at IS null AND r.id = :id`
+
+        const timesStrung = await sequelizeConnection.query(timesStrungSql, {
+            replacements: { id: cr.racketId },
+            type: QueryTypes.SELECT,
+            mapToModel: true
+        });
 
         const clientRacketDetailDto: ClientRacketDetailDTO = {
             clientRacketId: cr.id,
@@ -26,7 +38,8 @@ export const GetAllClientRacketsAsync = async (filters?: GetAllClientRacketsFilt
             racketId: cr.racketId,
             racketBrand: racket.brand,
             racketModel: racket.model,
-            racketYear: racket.year
+            racketYear: racket.year,
+            timesStrung: timesStrung.length
         }
 
         return clientRacketDetailDto;
@@ -56,6 +69,17 @@ export const GetRacketsByClientId = async (clientId: number) => {
     const query = clientRackets.map(async (cr) => {
         const racket = await Racket.findByPk(cr.racketId);
         const client = await Client.findByPk(cr.clientId);
+        const timesStrungSql = `SELECT s.id
+        FROM "StringJobs" s 
+        LEFT OUTER JOIN "ClientRackets" cr ON cr.id = s.client_racket_id 
+        LEFT OUTER JOIN "Rackets" r ON r.id = cr.racket_id 
+        WHERE s.deleted_at IS null AND cr.serial_number = :id`
+
+        const timesStrung = await sequelizeConnection.query(timesStrungSql, {
+            replacements: { id: cr.serialNumber },
+            type: QueryTypes.SELECT,
+            mapToModel: true
+        });
 
         const clientRacketDetailDto: ClientRacketDetailDTO = {
             clientRacketId: cr.id,
@@ -66,7 +90,8 @@ export const GetRacketsByClientId = async (clientId: number) => {
             racketId: cr.racketId,
             racketBrand: racket.brand,
             racketModel: racket.model,
-            racketYear: racket.year
+            racketYear: racket.year,
+            timesStrung: timesStrung.length
         }
 
         return clientRacketDetailDto;
