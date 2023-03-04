@@ -1,4 +1,7 @@
-import { QueryTypes } from 'sequelize'
+import { FindOptions, IncrementDecrementOptionsWithBy, InstanceDestroyOptions, InstanceRestoreOptions, InstanceUpdateOptions, Model, QueryTypes, SaveOptions, SetOptions } from 'sequelize'
+import { SequelizeHooks } from 'sequelize/types/hooks'
+import { ValidationOptions } from 'sequelize/types/instance-validator'
+import { Fn, Col, Literal } from 'sequelize/types/utils'
 import sequelizeConnection from '../config'
 import { StringJobDetailDTO } from '../dto/StringJobs/StringJobDetailDTO'
 import { StringJobListDTO } from '../dto/StringJobs/StringJobListDTO'
@@ -25,50 +28,59 @@ export const GetAllStringJobsAsync = async () => {
 }
 
 export const GetStringJobsByClientId = async (clientId: number): Promise<StringJobOutput[]> => {
-    const clientStringJobs = await StringJob.findAll({
-        where: {
-            clientId: clientId
-        }
-    })
-    if (!clientStringJobs) {
-        // @todo throw custom error
-        throw new Error('not found')
-    }
+    const sql = `SELECT s.id AS "id", 
+	s.job_date_time_utc AS "jobDateTimeUtc", 
+	s.client_id AS "clientId", 
+	s.client_racket_id AS "clientRacketId", 
+	r.brand || ' ' || r.model || ' ' || r.year AS "racket",
+	s.string_name AS "stringName",
+	s.string_type AS "stringType",
+	s.tension AS "tension",
+	s.tension_type AS "tensionType",
+	s.charge_amount AS "chargeAmount",
+	s.notes AS "notes"
+    FROM "StringJobs" s 
+	LEFT OUTER JOIN "Clients" c ON c.id = s.client_id 
+	LEFT OUTER JOIN "ClientRackets" cr ON cr.id = s.client_racket_id 
+	LEFT OUTER JOIN "Rackets" r ON r.id = cr.racket_id 
+    WHERE s.deleted_at IS null AND c.deleted_at IS null AND s.client_id = :id`;
+
+    const clientStringJobs: StringJob[] = await sequelizeConnection.query(sql, {
+        replacements: { id: clientId },
+        type: QueryTypes.SELECT,
+        mapToModel: true
+    });
+
     return clientStringJobs;
 }
 
 export const GetStringJobById = async (id: number): Promise<StringJobDetailDTO> => {
-    const stringJob = await StringJob.findByPk(id);
-    if (!stringJob) {
-        throw new Error('not found')
-    }
+    const sql = `SELECT s.id AS "stringJobId", 
+	s.job_date_time_utc AS "jobDateTimeUtc", 
+	s.client_id AS "clientId", 
+	s.client_racket_id AS "clientRacketId", 
+	c.first_name AS "clientFirstName", 
+	r.brand || ' ' || r.model || ' ' || r.year AS "racketName",
+	cr.serial_number AS "racketSerialNumber",
+	s.string_name AS "stringName",
+	s.string_type AS "stringType",
+	s.tension AS "tension",
+	s.tension_type AS "tensionType",
+	s.charge_amount AS "chargeAmount",
+	s.notes AS "notes"
+    FROM "StringJobs" s 
+	LEFT OUTER JOIN "Clients" c ON c.id = s.client_id 
+	LEFT OUTER JOIN "ClientRackets" cr ON cr.id = s.client_racket_id 
+	LEFT OUTER JOIN "Rackets" r ON r.id = cr.racket_id 
+    WHERE s.deleted_at IS null AND c.deleted_at IS null AND s.id = :id`;
 
-    let clientRacket: ClientRacket;
-    let racket: Racket;
-    const client: Client = await Client.findByPk(stringJob.clientId);
+    const stringJobDto: StringJobDetailDTO[] = await sequelizeConnection.query(sql, {
+        replacements: { id: id },
+        type: QueryTypes.SELECT,
+        mapToModel: true
+    });
 
-    if (stringJob.clientRacketId) {
-        clientRacket = await ClientRacket.findByPk(stringJob.clientRacketId);
-        racket = await Racket.findByPk(clientRacket.racketId);
-    }
-
-    const stringJobDto: StringJobDetailDTO = {
-        stringJobId: stringJob.id,
-        jobDateTimeUtc: stringJob.jobDateTimeUtc,
-        clientId: stringJob.clientId,
-        clientRacketId: stringJob.clientRacketId,
-        clientFirstName: client.firstName,
-        racketName: clientRacket ? `${racket.brand} ${racket.model} ${racket.year}` : stringJob.racket,
-        racketSerialNumber: clientRacket ? clientRacket.serialNumber : '',
-        stringName: stringJob.stringName,
-        stringType: stringJob.stringType,
-        tension: stringJob.tension,
-        tensionType: stringJob.tensionType,
-        chargeAmount: stringJob.chargeAmount,
-        notes: stringJob.notes
-    }
-
-    return stringJobDto;
+    return stringJobDto[0];
 }
 
 export const CreateStringJobAsync = async (stringJob: StringJobInput): Promise<StringJobOutput> => {
